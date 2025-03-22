@@ -7,13 +7,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Upload Your Legal Document</h1>
-        <input type="file" id="fileInput">
-        <button onclick="uploadFile()">Upload & Process</button>
 
-        <h2>Analysis Result:</h2>
-        <div id="result-box"></div>
+    <div class="container">
+        <h2>Upload Your Legal Document</h2>
+
+        <form id="upload-form">
+            <input type="file" id="file" required>
+            <button type="submit">Upload & Process</button>
+        </form>
+
+        <div id="loading">
+            <p>Processing your document...</p>
+            <div class="spinner"></div>
+        </div>
+
+        <div id="result-box">
+            <h3>Analysis Result:</h3>
+            <div id="output-box"></div>
+        </div>
     </div>
 
     <script src="script.js"></script>
