@@ -1,15 +1,18 @@
-document.getElementById("uploadForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    
-    let formData = new FormData();
-    let fileInput = document.getElementById("fileInput").files[0];
-    
-    if (!fileInput) {
-        alert("Please select a file.");
+async function uploadFile() {
+    const fileInput = document.getElementById("fileInput");
+    const resultBox = document.getElementById("result-box");
+
+    if (fileInput.files.length === 0) {
+        resultBox.style.display = "block";
+        resultBox.innerHTML = "<b style='color:red;'>Please select a file to upload.</b>";
         return;
     }
-    
-    formData.append("file", fileInput);
+
+    let formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    resultBox.style.display = "block";
+    resultBox.innerHTML = "<b>Processing...</b> ⏳";
 
     try {
         let response = await fetch("https://aipr-project.onrender.com/process", {
@@ -17,12 +20,14 @@ document.getElementById("uploadForm").addEventListener("submit", async function 
             body: formData
         });
 
-        let result = await response.json();
-        
-        // Display the output
-        document.getElementById("output").innerHTML = `<strong>Analysis Result:</strong> ${result.message}`;
+        let data = await response.json();
+
+        if (response.ok) {
+            resultBox.innerHTML = `<b>Processed Output:</b><br><p>${data.result || "No text extracted"}</p>`;
+        } else {
+            resultBox.innerHTML = `<b style="color:red;">Error:</b> ${data.error || "Something went wrong"}`;
+        }
     } catch (error) {
-        console.error("Error:", error);
-        document.getElementById("output").innerHTML = `<strong>Error processing file.</strong>`;
+        resultBox.innerHTML = `<b style="color:red;">Request failed:</b> ${error.message}`;
     }
-});
+}
