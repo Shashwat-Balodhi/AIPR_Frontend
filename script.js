@@ -1,30 +1,28 @@
-document.getElementById("upload-form").addEventListener("submit", async function (event) {
-    event.preventDefault();
+document.getElementById("upload-form").addEventListener("submit", async function(event) {
+    event.preventDefault(); // Prevent page reload
 
     let fileInput = document.getElementById("file");
-    let loadingDiv = document.getElementById("loading");
-    let outputBox = document.getElementById("output-box");
-    let resultBox = document.getElementById("result-box");
+    let file = fileInput.files[0];
 
-    if (fileInput.files.length === 0) {
-        alert("Please select a file to upload.");
+    if (!file) {
+        alert("Please select a PDF file to upload.");
         return;
     }
 
     let formData = new FormData();
-    formData.append("file", fileInput.files[0]);
+    formData.append("file", file);
 
-    // Show loading animation and result box
-    loadingDiv.style.display = "block";
-    resultBox.style.display = "block";
-    outputBox.innerHTML = "<p>Waiting for response...</p>";
+    // Show loading animation
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("result-box").style.display = "none";
 
-    // Start 2-minute countdown timer
+    // Start countdown timer (2 minutes)
     let timeLeft = 120;
-    let countdownInterval = setInterval(() => {
+    let countdownElement = document.getElementById("countdown");
+    let timer = setInterval(() => {
         timeLeft--;
-        outputBox.innerHTML = `<p>Processing... (${timeLeft}s remaining)</p>`;
-        if (timeLeft <= 0) clearInterval(countdownInterval);
+        countdownElement.innerText = `${timeLeft}s remaining`;
+        if (timeLeft <= 0) clearInterval(timer);
     }, 1000);
 
     try {
@@ -33,22 +31,19 @@ document.getElementById("upload-form").addEventListener("submit", async function
             body: formData
         });
 
-        clearInterval(countdownInterval); // Stop the timer when response is received
-        loadingDiv.style.display = "none"; // Hide loading animation
-
-        if (!response.ok) {
-            outputBox.innerHTML = "<p>Error processing document. Please try again.</p>";
-            return;
-        }
-
         let result = await response.json();
-        outputBox.innerHTML = `<pre>${result.text || "No text extracted"}</pre>`; // Display extracted text
-        outputBox.style.maxHeight = "400px"; // Ensure scrollable output
-        outputBox.style.overflowY = "auto";
+
+        // Stop loading & timer
+        clearInterval(timer);
+        document.getElementById("loading").style.display = "none";
+
+        // Show result
+        document.getElementById("result-box").style.display = "block";
+        document.getElementById("output-box").innerText = result.output || "No text extracted.";
 
     } catch (error) {
-        clearInterval(countdownInterval);
-        loadingDiv.style.display = "none";
-        outputBox.innerHTML = "<p>Server error. Please try again later.</p>";
+        clearInterval(timer);
+        document.getElementById("loading").style.display = "none";
+        alert("Error processing document. Please try again.");
     }
 });
