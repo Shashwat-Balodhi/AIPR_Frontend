@@ -7,21 +7,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="container">
         <h2>Upload Your Legal Document</h2>
-
         <form id="upload-form">
-            <input type="file" id="file" required>
+            <input type="file" id="file" accept=".pdf" required>
             <button type="submit">Upload & Process</button>
         </form>
 
-        <div id="loading">
+        <!-- Loading Animation -->
+        <div id="loading" style="display: none;">
             <p>Processing your document...</p>
             <div class="spinner"></div>
+            <p id="countdown">120s remaining</p>
         </div>
 
-        <div id="result-box">
+        <!-- Result Box -->
+        <div id="result-box" style="display: none;">
             <h3>Analysis Result:</h3>
             <div id="output-box"></div>
         </div>
