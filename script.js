@@ -23,7 +23,7 @@ async function uploadFile() {
         let data = await response.json();
 
         if (response.ok) {
-            resultBox.innerHTML = `<b>Processed Output:</b><br><p>${data.result || "No text extracted"}</p>`;
+            resultBox.innerHTML = `<b>Analysis Result:</b><br><pre>${data.analysis || "No analysis received"}</pre>`;
         } else {
             resultBox.innerHTML = `<b style="color:red;">Error:</b> ${data.error || "Something went wrong"}`;
         }
