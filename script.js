@@ -5,13 +5,13 @@ document.getElementById("uploadForm").addEventListener("submit", async function 
     formData.append("file", document.getElementById("pdfFile").files[0]);
 
     try {
-        let response = await fetch("https://aipr-project.onrender.com", { // ✅ Update Backend URL
+        let response = await fetch("https://aipr-project.onrender.com/process", { // ✅ Updated path
             method: "POST",
             body: formData
         });
 
         let result = await response.json();
-        document.getElementById("output").innerText = result.message; // ✅ Show Output on Website
+        document.getElementById("output").innerText = result.message; // ✅ Display result
     } catch (error) {
         console.error("Error:", error);
         document.getElementById("output").innerText = "Error processing document.";
