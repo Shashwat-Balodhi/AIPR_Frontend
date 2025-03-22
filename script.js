@@ -1,4 +1,4 @@
-const API_URL = "https://github.com/Shashwat-Balodhi/AIPR_Backend.git"; // Use the new backend URL
+const API_URL = ""; // Use the new backend URL
 
 document.getElementById("uploadForm").addEventListener("submit", async (event) => {
     event.preventDefault();
