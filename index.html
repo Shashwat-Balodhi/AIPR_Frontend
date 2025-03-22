@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIPR Document Processor</title>
+    <title>AI Legal Proofreader</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Upload Your Legal Document</h1>
-    <form id="uploadForm">
-        <input type="file" id="pdfFile" accept="application/pdf" required>
-        <button type="submit">Upload & Process</button>
-    </form>
-    <h2>Analysis Result:</h2>
-    <p id="output"></p>
-    
+    <div class="container">
+        <h1>Upload Your Legal Document</h1>
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()">Upload & Process</button>
+
+        <h2>Analysis Result:</h2>
+        <div id="result-box"></div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
-
