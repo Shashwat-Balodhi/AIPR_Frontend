@@ -1,16 +1,19 @@
-const API_URL = ""; // Use the new backend URL
-
-document.getElementById("uploadForm").addEventListener("submit", async (event) => {
+document.getElementById("uploadForm").addEventListener("submit", async function (event) {
     event.preventDefault();
-    
-    const formData = new FormData();
-    formData.append("pdf", document.getElementById("pdfInput").files[0]);
 
-    const response = await fetch(`${API_URL}/process`, {
-        method: "POST",
-        body: formData,
-    });
+    let formData = new FormData();
+    formData.append("file", document.getElementById("pdfFile").files[0]);
 
-    const result = await response.json();
-    document.getElementById("output").innerText = result.text; // Display result
+    try {
+        let response = await fetch("https://aipr-project.onrender.com", { // ✅ Update Backend URL
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+        document.getElementById("output").innerText = result.message; // ✅ Show Output on Website
+    } catch (error) {
+        console.error("Error:", error);
+        document.getElementById("output").innerText = "Error processing document.";
+    }
 });
