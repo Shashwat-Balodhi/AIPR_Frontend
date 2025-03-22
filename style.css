@@ -1,10 +1,48 @@
-/* Container */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    margin: 50px;
+}
+
 .container {
-    width: 60%;
+    width: 50%;
     margin: auto;
     padding: 20px;
     background: white;
     border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+input {
+    padding: 10px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#result-box {
+    width: 80%;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    min-height: 50px;
+    background-color: #f9f9f9;
+    display: none;
+    font-size: 16px;
+    color: #333;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -30,22 +68,7 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Style result box */
-#result-box {
-    width: 80%;
-    margin: 20px auto;
-    padding: 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    min-height: 50px;
-    background-color: #f9f9f9;
-    display: none;
-    font-size: 16px;
-    color: #333;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Output Box */
+/* Style output box properly */
 #output-box {
     max-height: 400px;
     overflow-y: auto;
