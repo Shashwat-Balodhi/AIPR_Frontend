@@ -1,19 +1,23 @@
-document.getElementById("upload-form").addEventListener("submit", async function (event) {
-    event.preventDefault();  // Stop default form submission
+document.getElementById("upload-form").addEventListener("submit", async function(event) {
+    event.preventDefault(); // Prevent default form submission
 
     let fileInput = document.getElementById("file-input");
-    let file = fileInput.files[0];
+    let resultBox = document.getElementById("result-box");
+    let outputBox = document.getElementById("output-box");
+    let loading = document.getElementById("loading");
 
-    if (!file) {
-        alert("Please select a file first.");
+    // Check if a file is selected
+    if (fileInput.files.length === 0) {
+        alert("Please select a file to upload.");
         return;
     }
 
-    let formData = new FormData();
-    formData.append("file", file);  // Backend expects 'file' key
-
     // Show loading animation
-    document.getElementById("loading").style.display = "block";
+    loading.style.display = "block";
+    resultBox.style.display = "none";
+
+    let formData = new FormData();
+    formData.append("file", fileInput.files[0]);
 
     try {
         let response = await fetch("https://aipr-project.onrender.com/process", {
@@ -22,21 +26,19 @@ document.getElementById("upload-form").addEventListener("submit", async function
         });
 
         if (!response.ok) {
-            throw new Error(`Server error: ${response.statusText}`);
+            throw new Error("Server responded with an error.");
         }
 
         let data = await response.json();
 
-        // Hide loading animation
-        document.getElementById("loading").style.display = "none";
-
-        // Show result
-        document.getElementById("result-box").style.display = "block";
-        document.getElementById("output-box").innerText = data.result;
+        // Hide loading animation and show results
+        loading.style.display = "none";
+        resultBox.style.display = "block";
+        outputBox.textContent = data.result; // Ensure backend sends a `result` field
 
     } catch (error) {
         console.error("Error:", error);
-        alert("Failed to process document.");
-        document.getElementById("loading").style.display = "none";
+        loading.style.display = "none";
+        alert("Failed to process the document. Check your API URL and CORS settings.");
     }
 });
