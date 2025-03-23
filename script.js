@@ -5,11 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const outputBox = document.getElementById("output-box");
     const loading = document.getElementById("loading");
 
-    if (!uploadForm || !fileInput || !resultBox || !outputBox || !loading) {
-        console.error("One or more elements not found! Check HTML IDs.");
-        return;
-    }
-
     uploadForm.addEventListener("submit", async function (event) {
         event.preventDefault();
         
@@ -39,18 +34,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const result = await response.json();
 
-            // Hide loading animation and display result
+            // Hide loading animation and show result box
             loading.style.display = "none";
             resultBox.style.display = "block";
 
-            // Check if the result contains the expected output
-            if (result.message) {
-                outputBox.textContent = result.message;
-            } else if (result.error) {
-                outputBox.textContent = "Error: " + result.error;
-            } else {
-                outputBox.textContent = "Unexpected response received!";
-            }
+            // ✅ Only show Legal Analysis
+            outputBox.innerHTML = `
+                <strong>Legal Analysis:</strong><br>${result.analysis || "No analysis available"}
+            `;
         } catch (error) {
             console.error("Error processing file:", error);
             outputBox.textContent = "Error processing file. Please try again.";
