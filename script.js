@@ -1,10 +1,10 @@
-document.getElementById("uploadBtn").addEventListener("click", async () => {
+document.getElementById("uploadBtn").addEventListener("click", async function () {
     const fileInput = document.getElementById("fileInput");
-    const outputBox = document.getElementById("output-box");
     const resultBox = document.getElementById("result-box");
+    const outputBox = document.getElementById("output-box");
     const loading = document.getElementById("loading");
 
-    if (fileInput.files.length === 0) {
+    if (!fileInput.files.length) {
         alert("Please select a file.");
         return;
     }
@@ -12,31 +12,29 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
     let formData = new FormData();
     formData.append("file", fileInput.files[0]);
 
-    // Show loading
-    loading.style.display = "block";
-    resultBox.style.display = "none";
+    resultBox.style.display = "none"; // Hide result initially
+    outputBox.innerText = "Waiting for response...";
+    loading.style.display = "block"; // Show loading animation
 
     try {
-        let response = await fetch("https://aipr-project.onrender.com/process", {
+        const response = await fetch("https://aipr-project.onrender.com/process", {
             method: "POST",
             body: formData,
         });
 
-        let result = await response.json();
-        console.log("API Response:", result); // Debugging log
+        const result = await response.json();
+        loading.style.display = "none"; // Hide loading
 
-        if (result.message) {
-            outputBox.textContent = result.message; // Ensure this matches backend response
+        if (response.ok) {
+            resultBox.style.display = "block"; // Show result
+            outputBox.innerText = result.message || "No text extracted";
         } else {
-            outputBox.textContent = "No valid response received.";
+            outputBox.innerText = `Error: ${result.error || "Something went wrong"}`;
+            resultBox.style.display = "block";
         }
-
     } catch (error) {
-        console.error("Error:", error);
-        outputBox.textContent = "An error occurred while processing.";
-    } finally {
-        // Hide loading and show results
         loading.style.display = "none";
+        outputBox.innerText = "Failed to connect to the server.";
         resultBox.style.display = "block";
     }
 });
