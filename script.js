@@ -1,44 +1,40 @@
-document.getElementById("upload-form").addEventListener("submit", async function(event) {
-    event.preventDefault(); // Prevent default form submission
+document.getElementById("uploadBtn").addEventListener("click", async function () {
+    const fileInput = document.getElementById("fileInput");
+    const resultBox = document.getElementById("result-box");
+    const outputBox = document.getElementById("output-box");
+    const loading = document.getElementById("loading");
 
-    let fileInput = document.getElementById("file-input");
-    let resultBox = document.getElementById("result-box");
-    let outputBox = document.getElementById("output-box");
-    let loading = document.getElementById("loading");
-
-    // Check if a file is selected
-    if (fileInput.files.length === 0) {
-        alert("Please select a file to upload.");
+    if (!fileInput.files.length) {
+        alert("Please select a file.");
         return;
     }
-
-    // Show loading animation
-    loading.style.display = "block";
-    resultBox.style.display = "none";
 
     let formData = new FormData();
     formData.append("file", fileInput.files[0]);
 
+    resultBox.style.display = "none"; // Hide result initially
+    outputBox.innerText = "Waiting for response...";
+    loading.style.display = "block"; // Show loading
+
     try {
-        let response = await fetch("https://aipr-project.onrender.com/process", {
+        const response = await fetch("https://aipr-project.onrender.com/process", {
             method: "POST",
-            body: formData
+            body: formData,
         });
 
-        if (!response.ok) {
-            throw new Error("Server responded with an error.");
+        const result = await response.json();
+        loading.style.display = "none"; // Hide loading
+
+        if (response.ok) {
+            resultBox.style.display = "block"; // Show result
+            outputBox.innerText = JSON.stringify(result, null, 2);
+        } else {
+            outputBox.innerText = `Error: ${result.error || "Something went wrong"}`;
+            resultBox.style.display = "block";
         }
-
-        let data = await response.json();
-
-        // Hide loading animation and show results
-        loading.style.display = "none";
-        resultBox.style.display = "block";
-        outputBox.textContent = data.result; // Ensure backend sends a `result` field
-
     } catch (error) {
-        console.error("Error:", error);
         loading.style.display = "none";
-        alert("Failed to process the document. Check your API URL and CORS settings.");
+        outputBox.innerText = "Failed to connect to the server.";
+        resultBox.style.display = "block";
     }
 });
