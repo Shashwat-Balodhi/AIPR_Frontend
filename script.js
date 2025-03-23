@@ -1,53 +1,60 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let uploadForm = document.getElementById("upload-form");
-    let fileInput = document.getElementById("file-input");
-    let loading = document.getElementById("loading");
-    let resultBox = document.getElementById("result-box");
-    let outputBox = document.getElementById("output-box");
+    const uploadForm = document.getElementById("upload-form");
+    const fileInput = document.getElementById("file-input");
+    const resultBox = document.getElementById("result-box");
+    const outputBox = document.getElementById("output-box");
+    const loading = document.getElementById("loading");
 
-    if (!uploadForm || !fileInput) {
-        console.error("❌ ERROR: Form or file input not found! Check your HTML IDs.");
+    if (!uploadForm || !fileInput || !resultBox || !outputBox || !loading) {
+        console.error("One or more elements not found! Check HTML IDs.");
         return;
     }
 
-    uploadForm.addEventListener("submit", async (event) => {
-        event.preventDefault(); // Prevent default form submission
+    uploadForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        
+        const file = fileInput.files[0];
 
-        if (fileInput.files.length === 0) {
-            alert("⚠️ Please select a file.");
+        if (!file) {
+            alert("Please select a file before uploading.");
             return;
         }
 
-        let file = fileInput.files[0];
-        let formData = new FormData();
-        formData.append("file", file);
-
         // Show loading animation
         loading.style.display = "block";
-        resultBox.style.display = "none"; // Hide result while processing
+        resultBox.style.display = "none"; 
+
+        const formData = new FormData();
+        formData.append("file", file);
 
         try {
-            let response = await fetch("https://aipr-project.onrender.com/process", {
+            const response = await fetch("https://aipr-project.onrender.com/process", {
                 method: "POST",
-                body: formData,
+                body: formData
             });
 
-            let result = await response.json();
-            console.log("✅ API Response:", result);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
 
-            // Hide loading animation
+            const result = await response.json();
+
+            // Hide loading animation and display result
             loading.style.display = "none";
+            resultBox.style.display = "block";
 
+            // Check if the result contains the expected output
             if (result.message) {
                 outputBox.textContent = result.message;
-                resultBox.style.display = "block"; // Show result
+            } else if (result.error) {
+                outputBox.textContent = "Error: " + result.error;
             } else {
-                outputBox.textContent = "No response received.";
+                outputBox.textContent = "Unexpected response received!";
             }
         } catch (error) {
-            console.error("⚠️ Error sending request:", error);
+            console.error("Error processing file:", error);
+            outputBox.textContent = "Error processing file. Please try again.";
             loading.style.display = "none";
-            outputBox.textContent = "Error processing the file.";
             resultBox.style.display = "block";
         }
     });
