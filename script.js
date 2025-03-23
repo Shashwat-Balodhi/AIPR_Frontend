@@ -1,38 +1,42 @@
-document.getElementById("uploadBtn").addEventListener("click", function () {
-    const fileInput = document.getElementById("fileInput");
-    const file = fileInput.files[0];
+document.getElementById("upload-form").addEventListener("submit", async function (event) {
+    event.preventDefault();  // Stop default form submission
+
+    let fileInput = document.getElementById("file-input");
+    let file = fileInput.files[0];
 
     if (!file) {
-        alert("Please select a file to upload.");
+        alert("Please select a file first.");
         return;
     }
 
-    // Show loading spinner
+    let formData = new FormData();
+    formData.append("file", file);  // Backend expects 'file' key
+
+    // Show loading animation
     document.getElementById("loading").style.display = "block";
-    document.getElementById("result-box").style.display = "none";
 
-    const formData = new FormData();
-    formData.append("file", file);
+    try {
+        let response = await fetch("https://aipr-project.onrender.com/process", {
+            method: "POST",
+            body: formData
+        });
 
-    // Start a 2-minute timer
-    let timer = setTimeout(() => {
-        document.getElementById("output-box").innerText = "Processing taking longer than expected...";
-    }, 120000); // 2 minutes
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.statusText}`);
+        }
 
-    fetch("https://aipr-project.onrender.com/process", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        clearTimeout(timer); // Stop timer when response is received
-        document.getElementById("loading").style.display = "none"; // Hide spinner
-        document.getElementById("result-box").style.display = "block"; // Show result
-        document.getElementById("output-box").innerText = data.result || "No text extracted";
-    })
-    .catch(error => {
-        clearTimeout(timer);
+        let data = await response.json();
+
+        // Hide loading animation
         document.getElementById("loading").style.display = "none";
-        document.getElementById("output-box").innerText = "Error processing file.";
-    });
+
+        // Show result
+        document.getElementById("result-box").style.display = "block";
+        document.getElementById("output-box").innerText = data.result;
+
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Failed to process document.");
+        document.getElementById("loading").style.display = "none";
+    }
 });
