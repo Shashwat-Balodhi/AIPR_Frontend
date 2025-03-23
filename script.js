@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Show loading animation
         loading.style.display = "block";
-        resultBox.style.display = "none"; 
+        resultBox.style.display = "none";
 
         const formData = new FormData();
         formData.append("file", file);
@@ -34,23 +34,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const result = await response.json();
 
-            // ✅ Debugging - Check if analysis exists
+            // ✅ Debugging - Print the full API response
             console.log("API Response:", result);
 
             // Hide loading animation and show result box
             loading.style.display = "none";
             resultBox.style.display = "block";
 
-            // ✅ Show Legal Analysis
+            // ✅ Display Legal Analysis
             if (result.analysis) {
-                outputBox.innerHTML = `<strong>Legal Analysis:</strong><br>${result.analysis}`;
+                outputBox.innerHTML = `<strong>Legal Analysis:</strong><br>${result.analysis.replace(/\n/g, "<br>")}`;
             } else {
-                outputBox.innerHTML = "Error: No analysis received.";
+                outputBox.innerHTML = "❌ Error: No legal analysis received.";
             }
 
         } catch (error) {
             console.error("Error processing file:", error);
-            outputBox.textContent = "Error processing file. Please try again.";
+            outputBox.textContent = "❌ Error processing file. Please try again.";
             loading.style.display = "none";
             resultBox.style.display = "block";
         }
