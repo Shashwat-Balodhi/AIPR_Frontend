@@ -22,11 +22,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const formData = new FormData();
         formData.append("file", file);
 
+        console.log("⏳ Uploading file to backend...");
+
         try {
             const response = await fetch("https://aipr-project.onrender.com/process", {
                 method: "POST",
                 body: formData
             });
+
+            console.log("✅ API Request Sent. Waiting for response...");
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -34,14 +38,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const result = await response.json();
 
-            // ✅ Debugging - Print the full API response
-            console.log("API Response:", result);
+            console.log("✅ API Response Received:", result);
 
-            // Hide loading animation and show result box
+            // Hide loading animation and show result
             loading.style.display = "none";
             resultBox.style.display = "block";
 
-            // ✅ Display Legal Analysis
             if (result.analysis) {
                 outputBox.innerHTML = `<strong>Legal Analysis:</strong><br>${result.analysis.replace(/\n/g, "<br>")}`;
             } else {
@@ -49,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
         } catch (error) {
-            console.error("Error processing file:", error);
+            console.error("❌ Error:", error);
             outputBox.textContent = "❌ Error processing file. Please try again.";
             loading.style.display = "none";
             resultBox.style.display = "block";
