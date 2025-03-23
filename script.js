@@ -3,38 +3,40 @@ document.addEventListener("DOMContentLoaded", function () {
     let fileInput = document.getElementById("fileInput");
 
     if (!uploadBtn || !fileInput) {
-        console.error("Upload button or file input not found!");
+        console.error("❌ ERROR: Upload button or file input not found! Check your HTML IDs.");
         return;
     }
 
     uploadBtn.addEventListener("click", async () => {
         if (fileInput.files.length === 0) {
-            alert("Please select a file.");
-            console.error("No file selected.");
+            alert("⚠️ Please select a file.");
             return;
         }
 
         let file = fileInput.files[0];
-        console.log("Selected File:", file); // Debugging log
-
         let formData = new FormData();
         formData.append("file", file);
 
-        console.log("FormData before sending:", formData.get("file")); // Debugging log
+        try {
+            let response = await fetch("https://aipr-project.onrender.com/process", {
+                method: "POST",
+                body: formData,
+            });
 
-        let response = await fetch("https://aipr-project.onrender.com/process", {
-            method: "POST",
-            body: formData,
-        });
+            let result = await response.json();
+            console.log("✅ API Response:", result);
 
-        let result = await response.json();
-        console.log("API Response:", result); // Debugging log
+            let outputBox = document.getElementById("output-box");
+            let resultBox = document.getElementById("result-box");
 
-        if (result.message) {
-            document.getElementById("output-box").textContent = result.message;
-            document.getElementById("result-box").style.display = "block";
-        } else {
-            document.getElementById("output-box").textContent = "No response received.";
+            if (result.message) {
+                outputBox.textContent = result.message;
+                resultBox.style.display = "block";
+            } else {
+                outputBox.textContent = "No response received.";
+            }
+        } catch (error) {
+            console.error("⚠️ Error sending request:", error);
         }
     });
 });
