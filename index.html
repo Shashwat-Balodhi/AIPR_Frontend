@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Legal Proofreader</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:,"> <!-- Suppress favicon error -->
+    <meta http-equiv="Permissions-Policy" content="interest-cohort=()"> <!-- Disable FLoC tracking -->
 </head>
 <body>
     <div class="container">
         <h1>Upload Your Legal Document</h1>
 
-        <!-- Form for Uploading File -->
         <form id="upload-form">
             <input type="file" id="file-input" accept=".pdf">
             <button type="submit">Upload & Process</button>
         </form>
 
-        <!-- Loading Animation -->
         <div id="loading" style="display: none;">
             <div class="spinner"></div>
             <p>Processing... Please wait</p>
@@ -24,7 +24,6 @@
 
         <h2>Analysis Result:</h2>
 
-        <!-- Result Box -->
         <div id="result-box" style="display: none;">
             <pre id="output-box">Waiting for response...</pre>
         </div>
