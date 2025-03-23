@@ -34,14 +34,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const result = await response.json();
 
+            // ✅ Debugging - Check if analysis exists
+            console.log("API Response:", result);
+
             // Hide loading animation and show result box
             loading.style.display = "none";
             resultBox.style.display = "block";
 
-            // ✅ Only show Legal Analysis
-            outputBox.innerHTML = `
-                <strong>Legal Analysis:</strong><br>${result.analysis || "No analysis available"}
-            `;
+            // ✅ Show Legal Analysis
+            if (result.analysis) {
+                outputBox.innerHTML = `<strong>Legal Analysis:</strong><br>${result.analysis}`;
+            } else {
+                outputBox.innerHTML = "Error: No analysis received.";
+            }
+
         } catch (error) {
             console.error("Error processing file:", error);
             outputBox.textContent = "Error processing file. Please try again.";
