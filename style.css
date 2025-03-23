@@ -73,7 +73,10 @@ button:hover {
     max-height: 400px;
     overflow-y: auto;
     word-wrap: break-word;
+    white-space: pre-wrap;  /* Keeps text formatting */
     padding: 10px;
     border: 1px solid #ddd;
     background: #fff;
+    display: block; /* Ensure it's visible */
 }
+
