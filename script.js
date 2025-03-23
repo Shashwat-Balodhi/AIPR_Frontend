@@ -1,49 +1,38 @@
-document.getElementById("upload-form").addEventListener("submit", async function(event) {
-    event.preventDefault(); // Prevent page reload
-
-    let fileInput = document.getElementById("file");
-    let file = fileInput.files[0];
+document.getElementById("uploadBtn").addEventListener("click", function () {
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
 
     if (!file) {
-        alert("Please select a PDF file to upload.");
+        alert("Please select a file to upload.");
         return;
     }
 
-    let formData = new FormData();
-    formData.append("file", file);
-
-    // Show loading animation
+    // Show loading spinner
     document.getElementById("loading").style.display = "block";
     document.getElementById("result-box").style.display = "none";
 
-    // Start countdown timer (2 minutes)
-    let timeLeft = 120;
-    let countdownElement = document.getElementById("countdown");
-    let timer = setInterval(() => {
-        timeLeft--;
-        countdownElement.innerText = `${timeLeft}s remaining`;
-        if (timeLeft <= 0) clearInterval(timer);
-    }, 1000);
+    const formData = new FormData();
+    formData.append("file", file);
 
-    try {
-        let response = await fetch("https://proofreader-backend.onrender.com/process", {
-            method: "POST",
-            body: formData
-        });
+    // Start a 2-minute timer
+    let timer = setTimeout(() => {
+        document.getElementById("output-box").innerText = "Processing taking longer than expected...";
+    }, 120000); // 2 minutes
 
-        let result = await response.json();
-
-        // Stop loading & timer
-        clearInterval(timer);
+    fetch("https://aipr-project.onrender.com/process", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        clearTimeout(timer); // Stop timer when response is received
+        document.getElementById("loading").style.display = "none"; // Hide spinner
+        document.getElementById("result-box").style.display = "block"; // Show result
+        document.getElementById("output-box").innerText = data.result || "No text extracted";
+    })
+    .catch(error => {
+        clearTimeout(timer);
         document.getElementById("loading").style.display = "none";
-
-        // Show result
-        document.getElementById("result-box").style.display = "block";
-        document.getElementById("output-box").innerText = result.output || "No text extracted.";
-
-    } catch (error) {
-        clearInterval(timer);
-        document.getElementById("loading").style.display = "none";
-        alert("Error processing document. Please try again.");
-    }
+        document.getElementById("output-box").innerText = "Error processing file.";
+    });
 });
