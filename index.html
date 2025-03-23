@@ -8,23 +8,19 @@
 </head>
 <body>
     <div class="container">
-        <h2>Upload Your Legal Document</h2>
-        <form id="upload-form">
-            <input type="file" id="file" accept=".pdf" required>
-            <button type="submit">Upload & Process</button>
-        </form>
-
-        <!-- Loading Animation -->
-        <div id="loading" style="display: none;">
-            <p>Processing your document...</p>
+        <h1>Upload Your Legal Document</h1>
+        <input type="file" id="fileInput">
+        <button id="uploadBtn">Upload & Process</button>
+        
+        <!-- Loading Spinner -->
+        <div id="loading">
             <div class="spinner"></div>
-            <p id="countdown">120s remaining</p>
+            <p>Processing... Please wait</p>
         </div>
 
-        <!-- Result Box -->
-        <div id="result-box" style="display: none;">
-            <h3>Analysis Result:</h3>
-            <div id="output-box"></div>
+        <h2>Analysis Result:</h2>
+        <div id="result-box">
+            <pre id="output-box">Waiting for response...</pre>
         </div>
     </div>
 
