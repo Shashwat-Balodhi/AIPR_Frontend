@@ -14,7 +14,7 @@ document.getElementById("uploadBtn").addEventListener("click", async function ()
 
     resultBox.style.display = "none"; // Hide result initially
     outputBox.innerText = "Waiting for response...";
-    loading.style.display = "block"; // Show loading
+    loading.style.display = "block"; // Show loading animation
 
     try {
         const response = await fetch("https://aipr-project.onrender.com/process", {
@@ -27,7 +27,7 @@ document.getElementById("uploadBtn").addEventListener("click", async function ()
 
         if (response.ok) {
             resultBox.style.display = "block"; // Show result
-            outputBox.innerText = JSON.stringify(result, null, 2);
+            outputBox.innerText = result.message || "No text extracted";
         } else {
             outputBox.innerText = `Error: ${result.error || "Something went wrong"}`;
             resultBox.style.display = "block";
