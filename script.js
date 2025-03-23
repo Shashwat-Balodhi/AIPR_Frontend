@@ -1,45 +1,32 @@
 document.getElementById("uploadBtn").addEventListener("click", async () => {
     const fileInput = document.getElementById("fileInput");
-    const outputBox = document.getElementById("output-box");
-    const resultBox = document.getElementById("result-box");
-    const loading = document.getElementById("loading");
 
     if (fileInput.files.length === 0) {
         alert("Please select a file.");
+        console.error("No file selected.");
         return;
     }
 
     let file = fileInput.files[0];
-    console.log("Selected File:", file.name); // Debugging
+    console.log("Selected File:", file);  // Debugging log
 
     let formData = new FormData();
     formData.append("file", file);
 
-    // Show loading
-    loading.style.display = "block";
-    resultBox.style.display = "none";
+    console.log("FormData before sending:", formData.get("file")); // Debugging log
 
-    try {
-        let response = await fetch("https://aipr-project.onrender.com/process", {
-            method: "POST",
-            body: formData,
-        });
+    let response = await fetch("https://aipr-project.onrender.com/process", {
+        method: "POST",
+        body: formData,
+    });
 
-        let result = await response.json();
-        console.log("API Response:", result); // Debugging log
+    let result = await response.json();
+    console.log("API Response:", result); // Debugging log
 
-        if (result.message) {
-            outputBox.textContent = result.message; // Ensure this matches backend response
-        } else {
-            outputBox.textContent = "No valid response received.";
-        }
-
-    } catch (error) {
-        console.error("Error:", error);
-        outputBox.textContent = "An error occurred while processing.";
-    } finally {
-        // Hide loading and show results
-        loading.style.display = "none";
-        resultBox.style.display = "block";
+    if (result.message) {
+        document.getElementById("output-box").textContent = result.message;
+        document.getElementById("result-box").style.display = "block";
+    } else {
+        document.getElementById("output-box").textContent = "No response received.";
     }
 });
