@@ -3,7 +3,7 @@
 
 This is the frontend for the **AI Proofreader (AIPR)** system. It allows users to upload legal documents (PDFs), sends them to the backend for processing, and displays the AI-analyzed output on the webpage.
 
-🌐 Live Demo: [Click Here](https://your-frontend-deployment-link.com)
+🌐 Live Demo: [Click Here](https://shashwat-balodhi.github.io/AIPR_Frontend/)   backend server is offline right now...
 
 🛠️ Backend Repo: [AIPR_Backend](https://github.com/Shashwat-Balodhi/AIPR_Backend)
 
